@@ -1,8 +1,23 @@
 from rest_framework import serializers
-from .models import developers
+from .models import User
 
-class developersSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=10, min_length=6,write_only=True )
 
     class Meta: 
-        model = developers
-        fields = ('fname', 'lname', 'github_username', 'stacks')
+        model = User
+        fields = ('email', 'username', 'password')
+
+    # Validate User
+    def validate(self, attrs): 
+        email = attrs.get('email', '')
+        username = attrs.get('username', '')
+
+        if not username.isalnum():
+            raise serializers.ValidationError('Username should be AlphaNumerics only!')
+
+        return attrs
+
+    # Create User
+    def create(self, validated_data):
+        return User.objects.createUser(**validated_data)
