@@ -1,4 +1,4 @@
-# RESTful-API
+# REST-API
 
 ## REST API developed using Python(Django).
 This Django RESTful API can:
