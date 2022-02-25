@@ -6,7 +6,7 @@ from django.contrib.auth.models import (AbstractBaseUser,BaseUserManager,Permiss
 # Create your models here.
 class UserManager(BaseUserManager):
     
-    def createUser(self,username,email,password=None):
+    def create_user(self,username,email,password=None):
         if username is None:
             raise TypeError('Users should have a username!')
         if email is None:
@@ -17,30 +17,30 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def createSuperUser(self,username,email,password=None):
+    def create_superuser(self, username, email, password=None):
         if password is None:
-            raise TypeError('Password should be empty!')
+            raise TypeError('Password should not be none')
 
-        user = self.createUser(username,email,password)
+        user = self.create_user(username, email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=155, unique=True, db_index=True)
+    username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=155, unique=True, db_index=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIElDS = ['username']
+    REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.email
     
